@@ -42,7 +42,6 @@ INCLUDED_RULE_CATEGORIES = ['security', 'reliability', 'performance-efficiency',
 
 class CcRules:
     def __init__(self):
-
         try:
             print('Obtaining required environment variables...')
             self.cc_region = os.environ['CC_REGION'].lower()
@@ -56,7 +55,7 @@ class CcRules:
             sys.exit('Error: Please ensure all environment variables are set')
 
     def get_rules(self):
-        cfn_scan_endpoint = f'https://ap-southeast-2-api.cloudconformity.com/v1/services/'
+        cfn_scan_endpoint = f'https://{self.cc_region}-api.cloudconformity.com/v1/services/'
 
         headers = {
             'Content-Type': 'application/vnd.api+json',
