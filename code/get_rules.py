@@ -64,7 +64,15 @@ class CcRules:
 
         resp = requests.get(cfn_scan_endpoint, headers=headers)
         resp_json = json.loads(resp.text)
-        json_output = json.dumps(resp_json, indent=4, sort_keys=True)
+        msg = resp_json.get('Message')
+
+        if msg and 'explicit deny' in msg:
+            print(f"Error: {msg}\nPlease ensure your API credentials are correct, and that you've set the correct "
+                  f"region")
+            sys.exit(1)
+
+        print(resp_json)
+        # json_output = json.dumps(resp_json, indent=4, sort_keys=True)
 
         return resp_json
 
