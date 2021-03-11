@@ -27,13 +27,8 @@ INCLUDED_HEADERS = [
     'knowledge-base-html',
     'multi-risk-level',
     'must-be-configured',
-    'customisable',
     'not-scored',
-    'requires-all-descriptors',
-    'primary-descriptors',
-    'secondary-descriptors',
-    'has-cost-and-waste',
-    'organisation',
+    'categories',
 ]
 
 INCLUDED_RULE_CATEGORIES = ['security', 'reliability', 'performance-efficiency', 'cost-optimisation',
@@ -114,14 +109,32 @@ class CcRules:
 
         return url
 
+    @staticmethod
+    def _get_clean_rules(included_rules):
+        clean_rules = []
+
+        for rule in included_rules:
+            new_rule = {}
+            for rule_key, rule_value in rule.items():
+                if rule_key not in INCLUDED_HEADERS:
+                    continue
+
+                else:
+                    new_rule[rule_key] = rule_value
+
+            clean_rules.append(new_rule)
+
+        return clean_rules
+
     def generate_included_csv(self, headers, included_rules, filename=OUTPUT_FILE):
-        self._process_included_rules(included_rules)
+        clean_rules = self._get_clean_rules(included_rules)
+        self._process_included_rules(clean_rules)
         self._join_included_csv_headers()
 
         with open(filename, 'w') as f:
             writer = csv.DictWriter(f, fieldnames=headers)
             writer.writeheader()
-            writer.writerows(included_rules)
+            writer.writerows(clean_rules)
 
         print(f'Created {OUTPUT_FILE}')
 
